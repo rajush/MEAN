@@ -30,7 +30,7 @@ mongodb.MongoClient.connect(uri, function(error, db){
         // together with ".toArray()" function so that you can work with an array of
         // documents rather than iterate through a cursor, which is what is returned if ".toArray()"
         // is not used.
-        var query = {screenplay: 'Peter Benchley'};
+        var query = {'ratings.audience': {'$gte': 90}}; //comparison operator (audience ratings greater than 90)
         db.collection("movies").find(query).toArray(function (error, docs) {
             if (error) {
                 console.log(error);
