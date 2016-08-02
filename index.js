@@ -11,7 +11,12 @@ mongodb.MongoClient.connect(uri, function(error, db){
         title: "Jaws",
         year: 1975,
         director: "Steven Spielberg",
-        rating: "PG"
+        rating: "PG",
+        ratings: {
+            critics: 80,
+            audience: 97
+        },
+        screenplay: ['Peter Benchley', 'Carl Gotlieb']
     };
 
     db.collection("movies").insert(doc, function(error, result){
@@ -21,7 +26,12 @@ mongodb.MongoClient.connect(uri, function(error, db){
         }
         console.log("Inserted to sample collection.");
 
-        db.collection("sample").find().toArray(function (error, docs) {
+        // when used with Node.js driver directly, the "find()" needs to be chained
+        // together with ".toArray()" function so that you can work with an array of
+        // documents rather than iterate through a cursor, which is what is returned if ".toArray()"
+        // is not used.
+        var query = {screenplay: 'Peter Benchley'};
+        db.collection("movies").find(query).toArray(function (error, docs) {
             if (error) {
                 console.log(error);
                 process.exit(1);
@@ -32,6 +42,6 @@ mongodb.MongoClient.connect(uri, function(error, db){
                 console.log(JSON.stringify(doc));
             });
             process.exit(0);
-        })
+        });
     });
 });
